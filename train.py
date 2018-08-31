@@ -1,7 +1,7 @@
 """
 Retrain the YOLO model for your own dataset.
 """
-
+import os
 import numpy as np
 import keras.backend as K
 from keras.layers import Input, Lambda
@@ -13,11 +13,14 @@ from yolo3.model import preprocess_true_boxes, yolo_body, tiny_yolo_body, yolo_l
 from yolo3.utils import get_random_data
 
 
+
 def _main():
     # annotation_path = 'train.txt'
     ## new file tf
     annotation_path = 'model_data/train.txt'
     log_dir = 'logs/000/'
+    log_dir = create_logs_dir('logs/')
+    print(log_dir)
     # classes_path = 'model_data/voc_classes.txt'
     ## new file tf
     classes_path = 'model_data/classes.txt'
@@ -194,6 +197,25 @@ def data_generator_wrapper(annotation_lines, batch_size, input_shape, anchors, n
     n = len(annotation_lines)
     if n==0 or batch_size<=0: return None
     return data_generator(annotation_lines, batch_size, input_shape, anchors, num_classes)
+
+def create_logs_dir(logs_dir):
+    """
+        When training all logs go into separate folders rather than multiple
+        in a single folder. Only events linked with one training run through
+        are logged.
+    """
+    contents_list = os.listdir(logs_dir)
+    contents_list.remove('.DS_Store')
+    contents_list = len(contents_list)
+    if contents_list == 0:
+        new_folder = os.mkdir(logs_dir + '1')
+        return logs_dir + str(contents_list)
+    else:
+        new_folder = os.mkdir(logs_dir + str(contents_list + 1))
+        return logs_dir + str(contents_list + 1) + '/'
+    
+
+
 
 if __name__ == '__main__':
     _main()
