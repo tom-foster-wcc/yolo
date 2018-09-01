@@ -63,6 +63,11 @@ optional arguments:
     ...
     ```
 
+    __this advice looks incorrect in execution?__
+    This advice doesn't match the execution of the program.
+
+    It's worth separating out each bounding box by images in the train,as it doesn't look like additional boxes are taken into account with how it reads the lines. 
+
 2. Make sure you have run `python convert.py -w yolov3.cfg yolov3.weights model_data/yolo_weights.h5`  
     The file model_data/yolo_weights.h5 is used to load pretrained weights.
 
