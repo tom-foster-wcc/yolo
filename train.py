@@ -17,6 +17,8 @@ from yolo3.utils import get_random_data
 def _main():
     # annotation_path = 'train.txt'
     ## new file tf
+    ## this needs to be moved over from training3 currently
+    ## manually getting moved over for now so don't forget!
     annotation_path = 'model_data/train.txt'
     log_dir = 'logs/000/'
     log_dir = create_logs_dir('logs/')
