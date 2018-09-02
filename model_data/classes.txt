@@ -1,3 +1,5 @@
 sharp deviation of route sign
-no entry sign
 speed sign
+keep left sign
+no entry sign
+give way sign
