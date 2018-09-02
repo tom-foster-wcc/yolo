@@ -23,3 +23,15 @@ Stage 2 early stopping @ 153 epochs loss @ 15.8775, 17.5058
     * speed sign: 67
     * sharp deviation of route sign: 25
     * no entry sign: 15
+    
+    updated and added more signs to the data set as well as new classes, whilst dataset is still unbalanced attempting to understand if that is an actual immediate factor or if that's a different problem.
+
+    * speed sign: 254
+    * sharp deviation of route sign: 186
+    * give way sign: 12
+    * no entry sign: 43
+    * keep left sign: 55
+
+    550 images will now be trained on the original 50 epochs stage 1 and 50 epochs stage 2.
+
+    Logs are stored in logs/2
