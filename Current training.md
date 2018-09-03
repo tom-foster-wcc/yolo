@@ -37,3 +37,7 @@ Stage 2 early stopping @ 153 epochs loss @ 15.8775, 17.5058
     Logs are stored in logs/2
 
     Round 3 started at 10:32 02/09/18
+
+    Round 3 crashed in transit to another location, at epoch 55, set up a new file which is called abandoned_train.py to load a specific epoch file and can be reloaded.
+
+    Initial epochs needs to be altered in this file as well.
