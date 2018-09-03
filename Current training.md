@@ -35,3 +35,5 @@ Stage 2 early stopping @ 153 epochs loss @ 15.8775, 17.5058
     550 images will now be trained on the original 50 epochs stage 1 and 50 epochs stage 2.
 
     Logs are stored in logs/2
+
+    Round 3 started at 10:32 02/09/18
