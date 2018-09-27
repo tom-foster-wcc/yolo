@@ -105,3 +105,9 @@ If you want to use original pretrained weights for YOLOv3:
 
 tf
 8. updated the output on the command line so it operates correctly with the short hand commands.
+
+9. command example
+    
+    ```bash
+    python yolo_video.py --model='logs/2/trained_weights_final.h5' --classes='model_data/classes.txt' --input='/Users/datascience4/Documents/yolo3/keras-yolo3/C13_NB_RAV_YR2_R07_180603092603.avi' --output='c_road'
+    ```
