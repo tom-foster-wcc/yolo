@@ -42,6 +42,7 @@ class YOLO(object):
         "iou" : 0.45,
         "model_image_size" : (416, 416),
         "gpu_num" : 1,
+        "output" : base_dir,
     }
 
     @classmethod
@@ -211,7 +212,7 @@ def detect_video(yolo, video_path, output_path=""):
     isOutput = True if output_path != "" else False
     if isOutput:
         print("!!! TYPE:", type(output_path), type(video_FourCC), type(video_fps), type(video_size))
-        out = cv2.VideoWriter((str(output_path) + '.avi'), video_FourCC, video_fps, video_size)
+        out = cv2.VideoWriter(os.path.join(base_dir, (str(output_path) + '.avi')), video_FourCC, video_fps, video_size)
     accum_time = 0
     curr_fps = 0
     fps = "FPS: ??"

@@ -55,9 +55,9 @@ if __name__ == '__main__':
         "--input", nargs='?', type=str,required=False,default='./path2your_video',
         help = "Video input path"
     )
-
+    ## Amended the parse to take as the default location
     parser.add_argument(
-        "--output", nargs='?', type=str, default="",
+        "--output", nargs='?', type=str, default="/Users/datascience4/Documents/yolo3/keras-yolo3/output/",
         help = "[Optional] Video output path"
     )
 
