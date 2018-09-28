@@ -18,6 +18,21 @@ from yolo3.utils import letterbox_image
 import os
 from keras.utils import multi_gpu_model
 
+
+base_dir = '/Users/datascience4/Documents/yolo3/keras-yolo3/output/'
+
+def open_file_to_write(base_dir, output_path=""):
+    write_output = open(base_dir + str(output_path) + '.txt', 'w+')
+    return write_output
+
+def output_write_line(write_output, line):
+    write_output.write(line)
+
+def close_file_to_write(write_output):
+    write_output.close()
+
+
+
 class YOLO(object):
     _defaults = {
         "model_path": 'model_data/yolo.h5',
@@ -43,6 +58,7 @@ class YOLO(object):
         self.anchors = self._get_anchors()
         self.sess = K.get_session()
         self.boxes, self.scores, self.classes = self.generate()
+
 
     def _get_class(self):
         classes_path = os.path.expanduser(self.classes_path)
@@ -99,7 +115,7 @@ class YOLO(object):
                 score_threshold=self.score, iou_threshold=self.iou)
         return boxes, scores, classes
 
-    def detect_image(self, image):
+    def detect_image(self, image, write_output, output_path=''):
         start = timer()
 
         if self.model_image_size != (None, None):
@@ -113,6 +129,8 @@ class YOLO(object):
         image_data = np.array(boxed_image, dtype='float32')
 
         print(image_data.shape)
+        #Output Text push shape to file
+        output_write_line(write_output, str(image_data.shape) + '\n')
         image_data /= 255.
         image_data = np.expand_dims(image_data, 0)  # Add batch dimension.
 
@@ -125,7 +143,10 @@ class YOLO(object):
             })
 
         print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
-
+        identified_label = 'Found {} boxes for {}'.format(len(out_boxes), ' img\n')
+        ## error here? trying to convert to a list so I can read the lines
+        ## into the file on an ongoing basis
+        output_write_line(write_output, identified_label)
         font = ImageFont.truetype(font='font/FiraMono-Medium.otf',
                     size=np.floor(3e-2 * image.size[1] + 0.5).astype('int32'))
         thickness = (image.size[0] + image.size[1]) // 300
@@ -145,7 +166,9 @@ class YOLO(object):
             bottom = min(image.size[1], np.floor(bottom + 0.5).astype('int32'))
             right = min(image.size[0], np.floor(right + 0.5).astype('int32'))
             print(label, (left, top), (right, bottom))
-
+            identified_label = label + ' (' + str(left) + ', ' + str(top) + ') ' + \
+                '(' + str(right) + ', ' + str(bottom) + ')' + '\n'
+            output_write_line(write_output, identified_label)
             if top - label_size[1] >= 0:
                 text_origin = np.array([left, top - label_size[1]])
             else:
@@ -163,15 +186,22 @@ class YOLO(object):
             del draw
 
         end = timer()
-        print(end - start)
+        print('time taken: ', end - start)
+        identified_label= end - start
+        output_write_line(write_output, str(identified_label) + '\n')
         return image
 
     def close_session(self):
         self.sess.close()
 
+
+
+    
+
 def detect_video(yolo, video_path, output_path=""):
     import cv2
     vid = cv2.VideoCapture(video_path)
+    write_output = open_file_to_write(base_dir, output_path=output_path)
     if not vid.isOpened():
         raise IOError("Couldn't open webcam or video")
     video_FourCC    = int(vid.get(cv2.CAP_PROP_FOURCC))
@@ -181,7 +211,7 @@ def detect_video(yolo, video_path, output_path=""):
     isOutput = True if output_path != "" else False
     if isOutput:
         print("!!! TYPE:", type(output_path), type(video_FourCC), type(video_fps), type(video_size))
-        out = cv2.VideoWriter(output_path, video_FourCC, video_fps, video_size)
+        out = cv2.VideoWriter((str(output_path) + '.avi'), video_FourCC, video_fps, video_size)
     accum_time = 0
     curr_fps = 0
     fps = "FPS: ??"
@@ -189,7 +219,7 @@ def detect_video(yolo, video_path, output_path=""):
     while True:
         return_value, frame = vid.read()
         image = Image.fromarray(frame)
-        image = yolo.detect_image(image)
+        image = yolo.detect_image(image, write_output, output_path=output_path)
         result = np.asarray(image)
         curr_time = timer()
         exec_time = curr_time - prev_time
@@ -208,5 +238,6 @@ def detect_video(yolo, video_path, output_path=""):
             out.write(result)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+    write_output.close()
     yolo.close_session()
 
