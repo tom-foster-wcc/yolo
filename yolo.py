@@ -118,7 +118,6 @@ class YOLO(object):
 
     def detect_image(self, image, write_output, output_path=''):
         start = timer()
-
         if self.model_image_size != (None, None):
             assert self.model_image_size[0]%32 == 0, 'Multiples of 32 required'
             assert self.model_image_size[1]%32 == 0, 'Multiples of 32 required'
@@ -215,11 +214,14 @@ def detect_video(yolo, video_path, output_path=""):
         out = cv2.VideoWriter(os.path.join(base_dir, (str(output_path) + '.avi')), video_FourCC, video_fps, video_size)
     accum_time = 0
     curr_fps = 0
+    frame_written = 1
     fps = "FPS: ??"
     prev_time = timer()
     while True:
         return_value, frame = vid.read()
         image = Image.fromarray(frame)
+        # write the frame out
+        output_write_line(write_output, ('Frame ' + str(frame_written) + '\n'))
         image = yolo.detect_image(image, write_output, output_path=output_path)
         result = np.asarray(image)
         curr_time = timer()
@@ -237,6 +239,7 @@ def detect_video(yolo, video_path, output_path=""):
         cv2.imshow("result", result)
         if isOutput:
             out.write(result)
+            frame_written += 1
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     write_output.close()

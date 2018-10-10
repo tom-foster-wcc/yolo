@@ -109,5 +109,5 @@ tf
 9. command example
     
     ```bash
-    python yolo_video.py --model='logs/2/trained_weights_final.h5' --classes='model_data/classes.txt' --input='/Users/datascience4/Documents/yolo3/keras-yolo3/C13_NB_RAV_YR2_R07_180603092603.avi' --output='c_road'
+    python yolo_video.py --model='logs/2/trained_weights_final.h5' --classes='model_data/classes.txt' --input='/Users/datascience4/Documents/yolo3/keras-yolo3/B4087_NB_RAV_R07_180519074106.avi' --output='B4087_NB_RAV_R07_180519074106_completed_test'
     ```
